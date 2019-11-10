@@ -39,7 +39,24 @@ __________
 6. A Jar file can be produced which can be used to run the Application
 7. Unit Test Cases Have been added to test the Application
 
-##### How To Run the Application
+___
+### REST API's
+
+
+* #### Money Transfer Between Accounts
+    ```
+    URL: /revolut/transfer/
+    METHOD: POST
+    CONTENT-TYPE: application/json
+    BODY: 
+        {
+        	"fromAccountId": 1,
+        	"toAccountId": 2,
+        	"amount": 2000
+        }
+    ```
+___
+#### How To Run the Application
 
  Download/Clone the Project
 ```
@@ -63,9 +80,9 @@ http://localhost:7000/revolut/
 >  Learning Reference for Javalin: https://javalin.io/documentation
 
 
+----
+----
 License
 ----
 
-Eclipse Public License - v 2.0
-
-
+##### Eclipse Public License - v 2.0
