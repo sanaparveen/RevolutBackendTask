@@ -2,21 +2,22 @@ package com.revolut.backend.task;
 
 import static org.junit.Assert.assertNull;
 
-import java.sql.SQLException;
-
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
+import org.powermock.core.classloader.annotations.PrepareForTest;
 
 import com.revolut.backend.task.config.DBConnectConfig;
 
 import io.javalin.Javalin;
 
+@PowerMockIgnore("javax.management.*")
+@PrepareForTest({ ApplicationTest.class, Javalin.class })
 class ApplicationTest {
 
 	@InjectMocks
@@ -28,7 +29,7 @@ class ApplicationTest {
 	@Mock
 	private DBConnectConfig dbConnectConfig;
 
-	@BeforeEach
+	@Before
 	private void setup() {
 		application = new Application();
 		restApp = Mockito.mock(Javalin.class);
@@ -43,12 +44,10 @@ class ApplicationTest {
 	}
 
 	@SuppressWarnings("static-access")
-	@Test
-	public void shouldThrowExceptionWhenJavalinFailedToStart() throws SQLException {
+	@Test(expected = Exception.class)
+	public void shouldThrowExceptionWhenJavalinFailedToStart() throws Exception {
 		Mockito.doThrow(new IllegalStateException("error")).when(restApp).create();
-		Assertions.assertThrows(Exception.class, () -> {
-			application.main(null);
-		});
+		application.main(null);
 	}
 
 	@Test
@@ -64,7 +63,7 @@ class ApplicationTest {
 		assertNull(restApp);
 	}
 
-	@AfterEach
+	@After
 	private void afterTestRun() {
 		application.stop();
 	}

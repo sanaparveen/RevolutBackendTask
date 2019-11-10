@@ -16,6 +16,7 @@ public class RevolutAPIError implements Serializable {
 	private String message;
 	private String field;
 	private int status;
+	private String error;
 
 	public RevolutAPIError(String code, String message, int status) {
 		this.code = code;
@@ -26,6 +27,11 @@ public class RevolutAPIError implements Serializable {
 	public RevolutAPIError(String code, String message, String field, int status) {
 		this(code, message, status);
 		this.message = message;
+	}
+
+	public RevolutAPIError(String code, String message, String field, int status, String error) {
+		this(code, message, field, status);
+		this.error = error;
 	}
 
 	public String getCode() {
@@ -59,4 +65,20 @@ public class RevolutAPIError implements Serializable {
 	public void setStatus(int status) {
 		this.status = status;
 	}
+
+	public String getError() {
+		return error;
+	}
+
+	public void setError(String error) {
+		this.error = error;
+	}
+
+	@Override
+	public String toString() {
+		return "RevolutAPIError [code=" + code + ", message=" + message + ", field=" + field + ", status=" + status
+				+ ", error=" + error + "]";
+	}
+
+	
 }

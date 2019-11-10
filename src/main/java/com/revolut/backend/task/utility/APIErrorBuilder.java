@@ -2,7 +2,11 @@ package com.revolut.backend.task.utility;
 
 import com.revolut.backend.task.model.RevolutAPIError;
 
-public class APIErrorBuilder {
+public final class APIErrorBuilder {
+
+	private APIErrorBuilder() {
+		
+	}
 
 	public static RevolutAPIError buildAPIError(String code, String message, int status) {
 		return new RevolutAPIError(code, message, status);

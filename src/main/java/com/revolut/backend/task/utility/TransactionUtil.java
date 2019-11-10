@@ -29,8 +29,7 @@ public class TransactionUtil {
 		this.validateAccountId(transaction);
 	}
 
-	public void validateAccounts(Optional<Account> sender, Optional<Account> receiver)
-			throws AccountNotFoundException {
+	public void validateAccounts(Optional<Account> sender, Optional<Account> receiver) throws AccountNotFoundException {
 
 		this.checkAccountsExist(sender, Constants.TRANSACTION_FROM_ACCOUNT_ID_FIELD);
 		this.checkAccountsExist(receiver, Constants.TRANSACTION_TO_ACCOUNT_ID_FIELD);
@@ -47,9 +46,9 @@ public class TransactionUtil {
 	 */
 	public void validateAmount(Transaction transaction, Account sender) throws InsufficientBalanceException {
 		if (transaction.getAmount().compareTo(sender.getBalance()) > 0) {
-			throw new InsufficientBalanceException(
-					APIErrorBuilder.buildAPIError(Constants.TRANSACTION_INSUFFICIENT_AMOUNT_CODE,
-							Constants.TRANSACTION_INSUFFICIENT_AMOUNT_MSG, HttpStatus.BAD_REQUEST_400));
+			throw new InsufficientBalanceException(APIErrorBuilder.buildAPIError(
+					Constants.TRANSACTION_INSUFFICIENT_AMOUNT_CODE, Constants.TRANSACTION_INSUFFICIENT_AMOUNT_MSG,
+					Constants.TRANSACTION_AMOUNT_FIELD, HttpStatus.BAD_REQUEST_400));
 		}
 	}
 
@@ -61,9 +60,9 @@ public class TransactionUtil {
 	 */
 	private void validateRequestAmount(Transaction transaction) throws InvalidTransferAmountException {
 		if (transaction.getAmount().compareTo(BigDecimal.ZERO) < 0) {
-			throw new InvalidTransferAmountException(
-					APIErrorBuilder.buildAPIError(Constants.TRANSACTION_INVALID_AMOUNT_CODE,
-							Constants.TRANSACTION_INVALID_AMOUNT_MSG, HttpStatus.BAD_REQUEST_400));
+			throw new InvalidTransferAmountException(APIErrorBuilder.buildAPIError(
+					Constants.TRANSACTION_INVALID_AMOUNT_CODE, Constants.TRANSACTION_INVALID_AMOUNT_MSG,
+					Constants.TRANSACTION_AMOUNT_FIELD, HttpStatus.BAD_REQUEST_400));
 		}
 	}
 
@@ -76,9 +75,9 @@ public class TransactionUtil {
 	 */
 	private void validateAccountId(Transaction transaction) throws InvalidAccountException {
 		if (transaction.getFromAccountId().equals(transaction.getToAccountId())) {
-			throw new InvalidAccountException(
-					APIErrorBuilder.buildAPIError(Constants.TRANSACTION_INVALID_ACCOUNT_ID_CODE,
-							Constants.TRANSACTION_INVALID_ACCOUNT_ID_MSG, HttpStatus.BAD_REQUEST_400));
+			throw new InvalidAccountException(APIErrorBuilder.buildAPIError(
+					Constants.TRANSACTION_INVALID_ACCOUNT_ID_CODE, Constants.TRANSACTION_INVALID_ACCOUNT_ID_MSG,
+					Constants.TRANSACTION_TO_ACCOUNT_ID_FIELD, HttpStatus.BAD_REQUEST_400));
 		}
 	}
 

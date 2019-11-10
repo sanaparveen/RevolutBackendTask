@@ -17,15 +17,12 @@ public class RevolutAPIException extends Exception implements Serializable {
 
 	private RevolutAPIError apiError;
 
-	public RevolutAPIException(RevolutAPIError error) {
-		super();
+	public RevolutAPIException(RevolutAPIError apiError) {
+		super(apiError.getMessage());
+		this.apiError = apiError;
 	}
 
 	public RevolutAPIError getApiError() {
 		return apiError;
-	}
-
-	public void setApiError(RevolutAPIError apiError) {
-		this.apiError = apiError;
 	}
 }

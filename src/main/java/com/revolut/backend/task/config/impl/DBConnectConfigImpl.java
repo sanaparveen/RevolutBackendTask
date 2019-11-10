@@ -27,9 +27,10 @@ public class DBConnectConfigImpl extends DBConnectConfig {
 		try {
 			RunScript.execute(connection,
 					new BufferedReader(new InputStreamReader(getClass().getResourceAsStream("/data.sql"))));
-		} catch (SQLException e) {
-			logger.error("Error in DB Connection Initialization: {}", e);
-			connection.close();
+		} catch (SQLException exception) {
+			logger.error("Error in DB Connection Initialization: {}", exception);
+			throw exception;
+
 		}
 	}
 }

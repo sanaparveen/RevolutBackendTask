@@ -1,5 +1,6 @@
 package com.revolut.backend.task.model;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 import javax.validation.constraints.DecimalMin;
@@ -12,7 +13,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * @author sanaparveen
  *
  */
-public class TransactionDTO {
+public class TransactionDTO implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 
 	@JsonProperty
 	private long transactionId;
@@ -31,7 +34,6 @@ public class TransactionDTO {
 	@DecimalMin(value = "0.0")
 	@NotNull
 	private BigDecimal amount;
-
 
 	public TransactionDTO() {
 

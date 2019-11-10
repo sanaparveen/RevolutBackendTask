@@ -1,8 +1,7 @@
 package com.revolut.backend.task.handler;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.Before;
+import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -18,18 +17,16 @@ class TransferHandlerTest {
 	@Mock
 	private TransactionService transactionService;
 
-	@BeforeEach
+	@Before
 	void setUp() throws Exception {
 		MockitoAnnotations.initMocks(TransferHandlerTest.class);
 		transactionService = Mockito.mock(TransactionService.class);
 	}
 
-	@Test
+	@Test(expected = IllegalArgumentException.class)
 	void shouldThrowErrorWhenHandleMethodCalledWithContextAsNull() {
+		transferHandler.handle(null);
 
-		Assertions.assertThrows(IllegalArgumentException.class, () -> {
-			transferHandler.handle(null);
-		});
 	}
 
 }
