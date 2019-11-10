@@ -44,9 +44,11 @@ public class Application {
 	 */
 	public void startApplication() {
 		logger.info("Starting Revolut Rest API Application For Money Transfer");
+
 		restApp = Javalin.create();
 		restApp.start();
 		registerRestAPI();
+
 		logger.info("Started Revolut Rest API Application For Money Transfer");
 	}
 
@@ -61,9 +63,11 @@ public class Application {
 	 */
 	public void stop() {
 		logger.info("Stopping Revolut Rest API Application For Money Transfer");
+
 		if (restApp != null) {
 			restApp.stop();
 		}
+
 		logger.info("Stopped Revolut Rest API Application For Money Transfer");
 	}
 }

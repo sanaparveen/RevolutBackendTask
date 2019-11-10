@@ -48,9 +48,6 @@ public class TransactionServiceImpl implements TransactionService {
 			transactionUtil.validateAccounts(sender, receiver);
 
 			return this.transfer(transaction, sender.get(), receiver.get());
-
-		} catch (RevolutAPIException revolutAPIException) {
-			throw new RevolutAPIException(revolutAPIException.getApiError());
 		} catch (TransactionException | AccountException e) {
 			throw new RevolutAPIException(APIErrorBuilder.buildAPIError(Constants.TRANSACTION_FAILED_CODE,
 					Constants.TRANSACTION_FAILED_MESSAGE, HttpStatus.BAD_REQUEST_400));

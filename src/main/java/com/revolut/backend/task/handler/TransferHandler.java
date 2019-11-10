@@ -40,7 +40,7 @@ public class TransferHandler implements Handler {
 				logger.info("Transaction ID: {}", transaction.get().getTransactionId());
 				context.status(HttpStatus.NO_CONTENT_204);
 			} catch (RevolutAPIException e) {
-				logger.info("Error in Request Body: {}", e);
+				logger.info("Error in Request Processiing: {}", e);
 				context.status(HttpStatus.BAD_REQUEST_400);
 			}
 		} else {
