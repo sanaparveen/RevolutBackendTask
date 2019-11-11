@@ -6,9 +6,12 @@ package com.revolut.backend.task;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 import com.revolut.backend.task.config.DBConnectConfig;
 import com.revolut.backend.task.config.impl.DBConnectConfigImpl;
 import com.revolut.backend.task.handler.TransferHandler;
+import com.revolut.backend.task.utility.AppInjector;
 import com.revolut.backend.task.utility.Constants;
 
 import io.javalin.Javalin;
@@ -25,6 +28,7 @@ public class Application {
 
 	private static final Logger logger = LoggerFactory.getLogger(Application.class);
 	private Javalin restApp;
+	private static Injector injector;
 
 	/**
 	 * Setup, configure the database H2 DB and start the application.
@@ -53,7 +57,8 @@ public class Application {
 	}
 
 	private void registerRestAPI() {
-		final TransferHandler transactionController = new TransferHandler();
+		injector = Guice.createInjector(new AppInjector());
+		final TransferHandler transactionController = injector.getInstance(TransferHandler.class);
 		restApp.get(Constants.HOME_API, ctx -> ctx.result("~~ ~~~ Revolut Backend Task for Money Transfer ~~~ ~~"));
 		restApp.post(Constants.TRANSFER_API, transactionController);
 	}

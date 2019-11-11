@@ -6,11 +6,12 @@ package com.revolut.backend.task.service.impl;
 import java.math.BigDecimal;
 import java.util.Optional;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import com.revolut.backend.task.entity.Account;
 import com.revolut.backend.task.exception.AccountException;
 import com.revolut.backend.task.model.AccountDTO;
 import com.revolut.backend.task.repository.AccountRepository;
-import com.revolut.backend.task.repository.impl.AccountRepositoryImpl;
 import com.revolut.backend.task.service.AccountService;
 import com.revolut.backend.task.utility.Converter;
 
@@ -18,9 +19,15 @@ import com.revolut.backend.task.utility.Converter;
  * @author sanaparveen
  *
  */
+@Singleton
 public class AccountServiceImpl implements AccountService {
 
-	private final AccountRepository accountRepository = new AccountRepositoryImpl();
+	private AccountRepository accountRepository;
+
+	@Inject
+	public AccountServiceImpl(AccountRepository accountRepository) {
+		this.accountRepository = accountRepository;
+	}
 
 	@Override
 	public Optional<Account> getAccountDetail(Long accountId) throws AccountException {

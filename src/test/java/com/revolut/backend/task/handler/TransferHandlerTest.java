@@ -2,29 +2,42 @@ package com.revolut.backend.task.handler;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
+import com.google.inject.AbstractModule;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+import com.revolut.backend.task.repository.AccountRepository;
+import com.revolut.backend.task.repository.TransactionRepository;
+import com.revolut.backend.task.repository.impl.AccountRepositoryImpl;
+import com.revolut.backend.task.repository.impl.TransactionRepositoryImpl;
+import com.revolut.backend.task.service.AccountService;
 import com.revolut.backend.task.service.TransactionService;
+import com.revolut.backend.task.service.impl.AccountServiceImpl;
+import com.revolut.backend.task.service.impl.TransactionServiceImpl;
 
-class TransferHandlerTest {
+public class TransferHandlerTest {
 
-	@InjectMocks
-	private TransferHandler transferHandler = new TransferHandler();
+	private TransferHandler transferHandler;
 
-	@Mock
-	private TransactionService transactionService;
+	private Injector injector;
 
 	@Before
-	void setUp() throws Exception {
+	public void setUp() throws Exception {
+		injector = Guice.createInjector(new AbstractModule() {
+			protected void configure() {
+				bind(TransactionRepository.class).to(TransactionRepositoryImpl.class);
+				bind(AccountRepository.class).to(AccountRepositoryImpl.class);
+				bind(AccountService.class).to(AccountServiceImpl.class);
+				bind(TransactionService.class).to(TransactionServiceImpl.class);
+			}
+		});
 		MockitoAnnotations.initMocks(TransferHandlerTest.class);
-		transactionService = Mockito.mock(TransactionService.class);
+		transferHandler = injector.getInstance(TransferHandler.class);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	void shouldThrowErrorWhenHandleMethodCalledWithContextAsNull() {
+	public void shouldThrowErrorWhenHandleMethodCalledWithContextAsNull() {
 		transferHandler.handle(null);
 
 	}

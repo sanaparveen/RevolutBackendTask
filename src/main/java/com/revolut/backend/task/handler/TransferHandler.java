@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.revolut.backend.task.handler;
 
 import java.util.Optional;
@@ -9,10 +6,10 @@ import org.eclipse.jetty.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.inject.Inject;
 import com.revolut.backend.task.exception.RevolutAPIException;
 import com.revolut.backend.task.model.TransactionDTO;
 import com.revolut.backend.task.service.TransactionService;
-import com.revolut.backend.task.service.impl.TransactionServiceImpl;
 
 import io.javalin.Context;
 import io.javalin.Handler;
@@ -24,8 +21,12 @@ import io.javalin.Handler;
 public class TransferHandler implements Handler {
 
 	private static final Logger logger = LoggerFactory.getLogger(TransferHandler.class);
-
 	private TransactionService transactionService;
+
+	@Inject
+	public TransferHandler(TransactionService transactionService) {
+		this.transactionService = transactionService;
+	}
 
 	@Override
 	public void handle(Context context) {
@@ -33,7 +34,6 @@ public class TransferHandler implements Handler {
 		logger.info("Transfer Handler starting Execution with Request Body: {}", context);
 
 		if (this.isContextValid(context)) {
-			transactionService = new TransactionServiceImpl();
 			try {
 				TransactionDTO transactionDTO = context.bodyAsClass(TransactionDTO.class);
 				Optional<TransactionDTO> transaction = transactionService.transferAmount(transactionDTO);

@@ -9,15 +9,22 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.powermock.core.classloader.annotations.PowerMockIgnore;
-import org.powermock.core.classloader.annotations.PrepareForTest;
 
+import com.google.inject.AbstractModule;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 import com.revolut.backend.task.config.DBConnectConfig;
+import com.revolut.backend.task.repository.AccountRepository;
+import com.revolut.backend.task.repository.TransactionRepository;
+import com.revolut.backend.task.repository.impl.AccountRepositoryImpl;
+import com.revolut.backend.task.repository.impl.TransactionRepositoryImpl;
+import com.revolut.backend.task.service.AccountService;
+import com.revolut.backend.task.service.TransactionService;
+import com.revolut.backend.task.service.impl.AccountServiceImpl;
+import com.revolut.backend.task.service.impl.TransactionServiceImpl;
 
 import io.javalin.Javalin;
 
-@PowerMockIgnore("javax.management.*")
-@PrepareForTest({ ApplicationTest.class, Javalin.class })
 class ApplicationTest {
 
 	@InjectMocks
@@ -29,9 +36,19 @@ class ApplicationTest {
 	@Mock
 	private DBConnectConfig dbConnectConfig;
 
+//	private Injector injector;
+
 	@Before
-	private void setup() {
-		application = new Application();
+	public void setup() {
+//		injector = Guice.createInjector(new AbstractModule() {
+//			protected void configure() {
+//				bind(TransactionRepository.class).to(TransactionRepositoryImpl.class);
+//				bind(AccountRepository.class).to(AccountRepositoryImpl.class);
+//				bind(AccountService.class).to(AccountServiceImpl.class);
+//				bind(TransactionService.class).to(TransactionServiceImpl.class);
+//			}
+//		});
+//		application = new Application();
 		restApp = Mockito.mock(Javalin.class);
 		dbConnectConfig = Mockito.mock(DBConnectConfig.class);
 		MockitoAnnotations.initMocks(this);
@@ -64,7 +81,7 @@ class ApplicationTest {
 	}
 
 	@After
-	private void afterTestRun() {
+	public void afterTestRun() {
 		application.stop();
 	}
 

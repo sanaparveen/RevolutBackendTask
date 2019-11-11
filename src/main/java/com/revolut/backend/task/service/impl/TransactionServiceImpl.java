@@ -9,6 +9,7 @@ import org.eclipse.jetty.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.inject.Inject;
 import com.revolut.backend.task.entity.Account;
 import com.revolut.backend.task.entity.Transaction;
 import com.revolut.backend.task.exception.AccountException;
@@ -17,7 +18,6 @@ import com.revolut.backend.task.exception.RevolutAPIException;
 import com.revolut.backend.task.exception.TransactionException;
 import com.revolut.backend.task.model.TransactionDTO;
 import com.revolut.backend.task.repository.TransactionRepository;
-import com.revolut.backend.task.repository.impl.TransactionRepositoryImpl;
 import com.revolut.backend.task.service.AccountService;
 import com.revolut.backend.task.service.TransactionService;
 import com.revolut.backend.task.utility.APIErrorBuilder;
@@ -33,9 +33,15 @@ public class TransactionServiceImpl implements TransactionService {
 
 	private static final Logger logger = LoggerFactory.getLogger(TransactionServiceImpl.class);
 
-	private final TransactionRepository transactionRepository = new TransactionRepositoryImpl();
+	private TransactionRepository transactionRepository;
 	private final TransactionUtil transactionUtil = new TransactionUtil();
-	private final AccountService accountService = new AccountServiceImpl();
+	private AccountService accountService;
+
+	@Inject
+	public TransactionServiceImpl(TransactionRepository transactionRepository, AccountService accountService) {
+		this.transactionRepository = transactionRepository;
+		this.accountService = accountService;
+	}
 
 	public Optional<TransactionDTO> transferAmount(TransactionDTO transactionDTO) throws RevolutAPIException {
 		Transaction transaction = Converter.convertToTransactionEntity(transactionDTO);
