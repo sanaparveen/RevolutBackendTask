@@ -55,6 +55,7 @@ ___
         	"amount": 2000
         }
     ```
+    Note: Please check Initial Data to Test the Application
 ___
 #### How To Run the Application
 
@@ -79,6 +80,34 @@ http://localhost:7000/revolut/
 >
 >  Learning Reference for Javalin: https://javalin.io/documentation
 
+### Database 
+
+1. Account Table
+    ```
+    
+    CREATE TABLE account (
+    	accountId LONG PRIMARY KEY AUTO_INCREMENT  NOT NULL,
+    	balance DECIMAL(12,2) NOT NULL
+    );
+    ```
+2. Transaction Table
+    ```
+    CREATE TABLE transaction (
+    	transactionId LONG PRIMARY KEY AUTO_INCREMENT  NOT NULL,
+    	toAccountId VARCHAR(128) NOT NULL,
+    	fromAccountId VARCHAR(128) NOT NULL,
+    	amount DECIMAL(12,2) NOT NULL,
+    );
+    ```
+3. Initial Data In Table To Test The Application With
+    ```
+    INSERT INTO account (accountId,balance) VALUES (1,2500.00);
+    INSERT INTO account (accountId,balance) VALUES (2,2000.00);
+    INSERT INTO account (accountId,balance) VALUES (3,2500.00);
+    INSERT INTO account (accountId,balance) VALUES (4,10000.00);
+    INSERT INTO account (accountId,balance) VALUES (5,250000000.00);
+    INSERT INTO account (accountId,balance) VALUES (6,200035678.00);
+    ```
 
 ----
 ----
