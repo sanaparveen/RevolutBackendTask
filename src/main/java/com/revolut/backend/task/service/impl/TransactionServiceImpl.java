@@ -43,7 +43,7 @@ public class TransactionServiceImpl implements TransactionService {
 		this.accountService = accountService;
 	}
 
-	public Optional<TransactionDTO> transferAmount(TransactionDTO transactionDTO) throws RevolutAPIException {
+	public TransactionDTO transferAmount(TransactionDTO transactionDTO) throws RevolutAPIException {
 		Transaction transaction = Converter.convertToTransactionEntity(transactionDTO);
 		try {
 
@@ -52,6 +52,7 @@ public class TransactionServiceImpl implements TransactionService {
 			Optional<Account> receiver = accountService.getAccountDetail(transaction.getToAccountId());
 
 			transactionUtil.validateAccounts(sender, receiver);
+
 
 			return this.transfer(transaction, sender.get(), receiver.get());
 		} catch (TransactionException | AccountException e) {
@@ -65,7 +66,7 @@ public class TransactionServiceImpl implements TransactionService {
 	 * Account Lock prevents deadlock when two thread are trying to update bank
 	 * accounts of similar opposite transaction.
 	 */
-	private Optional<TransactionDTO> transfer(Transaction transaction, Account sender, Account receiver)
+	private TransactionDTO transfer(Transaction transaction, Account sender, Account receiver)
 			throws TransactionException, AccountException, InsufficientBalanceException {
 
 		logger.info("Sender Balance Before withdraw: {},  Receiver Balance Before Deposit: {}", sender.getBalance(),
@@ -88,7 +89,7 @@ public class TransactionServiceImpl implements TransactionService {
 						withdrawAccount.getBalance(), depositAccount.getBalance());
 				Transaction transactionVal = transactionRepository.insert(transaction);
 
-				return Optional.of(Converter.convertToTransactionDto(transactionVal));
+				return Converter.convertToTransactionDto(transactionVal);
 			}
 		}
 	}

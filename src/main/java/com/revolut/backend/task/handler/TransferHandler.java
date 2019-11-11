@@ -1,7 +1,5 @@
 package com.revolut.backend.task.handler;
 
-import java.util.Optional;
-
 import org.eclipse.jetty.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,12 +33,12 @@ public class TransferHandler implements Handler {
 
 		if (this.isContextValid(context)) {
 			try {
-				TransactionDTO transactionDTO = context.bodyAsClass(TransactionDTO.class);
-				Optional<TransactionDTO> transaction = transactionService.transferAmount(transactionDTO);
-				logger.info("Transaction ID: {}", transaction.get().getTransactionId());
+				TransactionDTO transaction = transactionService
+						.transferAmount(context.bodyAsClass(TransactionDTO.class));
+				logger.info("Transaction ID: {}", transaction.getTransactionId());
 				context.status(HttpStatus.NO_CONTENT_204);
 			} catch (RevolutAPIException e) {
-				logger.info("Error in Request Processiing: {}", e.getApiError());
+				logger.info("Error in Request Processiing: {}", e);
 				context.json(e.getApiError());
 				context.status(HttpStatus.BAD_REQUEST_400);
 			}

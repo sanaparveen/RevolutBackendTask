@@ -10,7 +10,6 @@ import org.eclipse.jetty.http.HttpStatus;
 
 import com.revolut.backend.task.entity.Account;
 import com.revolut.backend.task.entity.Transaction;
-import com.revolut.backend.task.exception.AccountException;
 import com.revolut.backend.task.exception.AccountNotFoundException;
 import com.revolut.backend.task.exception.InsufficientBalanceException;
 import com.revolut.backend.task.exception.InvalidAccountException;
@@ -23,7 +22,7 @@ import com.revolut.backend.task.exception.InvalidTransferAmountException;
 public class TransactionUtil {
 
 	public void validateRequest(Transaction transaction)
-			throws InvalidTransferAmountException, InvalidAccountException, AccountException {
+			throws InvalidTransferAmountException, InvalidAccountException {
 
 		this.validateRequestAmount(transaction);
 		this.validateAccountId(transaction);

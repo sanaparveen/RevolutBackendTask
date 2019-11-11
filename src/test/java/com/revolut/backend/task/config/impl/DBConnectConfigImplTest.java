@@ -21,7 +21,6 @@ import com.revolut.backend.task.config.DBConnectConfig;
  * @author sanaparveen
  *
  */
-@RunWith(MockitoJUnitRunner.class)
 public class DBConnectConfigImplTest extends DBConnectConfig {
 
 	@InjectMocks
@@ -29,7 +28,6 @@ public class DBConnectConfigImplTest extends DBConnectConfig {
 
 	@Mock
 	RunScript runscript;
-
 
 	@Before
 	public void beforeTest() {

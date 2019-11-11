@@ -92,7 +92,7 @@ public class TransactionRepositoryImpl extends DBConnectConfig implements Transa
 
 			if (insertRS.next()) {
 				transaction.setTransactionId(insertRS.getLong(1));
-				logger.debug("Transfer registered " + transaction);
+				logger.debug("Transaction ID: {} ", transaction.getTransactionId());
 			} else {
 				throw new TransactionException("Can not register the transfer.");
 			}

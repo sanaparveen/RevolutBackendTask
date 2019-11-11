@@ -35,9 +35,6 @@ public class TransactionDTO implements Serializable {
 	@NotNull
 	private BigDecimal amount;
 
-	public TransactionDTO() {
-
-	}
 
 	public TransactionDTO(long fromAccountId, long toAccountId, BigDecimal amount) {
 		this.fromAccountId = fromAccountId;
@@ -89,4 +86,40 @@ public class TransactionDTO implements Serializable {
 		return "TransactionDTO [fromAccountId=" + fromAccountId + ", toAccountId=" + toAccountId + ", amount=" + amount
 				+ "]";
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((amount == null) ? 0 : amount.hashCode());
+		result = prime * result + (int) (fromAccountId ^ (fromAccountId >>> 32));
+		result = prime * result + (int) (toAccountId ^ (toAccountId >>> 32));
+		result = prime * result + (int) (transactionId ^ (transactionId >>> 32));
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		TransactionDTO other = (TransactionDTO) obj;
+		if (amount == null) {
+			if (other.amount != null)
+				return false;
+		} else if (!amount.equals(other.amount))
+			return false;
+		if (fromAccountId != other.fromAccountId)
+			return false;
+		if (toAccountId != other.toAccountId)
+			return false;
+		if (transactionId != other.transactionId)
+			return false;
+		return true;
+	}
+
+	
 }
