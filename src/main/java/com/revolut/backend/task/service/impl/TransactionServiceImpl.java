@@ -67,7 +67,7 @@ public class TransactionServiceImpl implements TransactionService {
 	 * accounts of similar opposite transaction.
 	 */
 	private TransactionDTO transfer(Transaction transaction, Account sender, Account receiver)
-			throws TransactionException, AccountException, InsufficientBalanceException {
+			throws TransactionException, InsufficientBalanceException {
 
 		logger.info("Sender Balance Before withdraw: {},  Receiver Balance Before Deposit: {}", sender.getBalance(),
 				receiver.getBalance());
@@ -83,11 +83,7 @@ public class TransactionServiceImpl implements TransactionService {
 			synchronized (lock2) {
 
 				transactionUtil.validateAmount(transaction, sender);
-				Account withdrawAccount = accountService.withdraw(sender, transaction.getAmount());
-				Account depositAccount = accountService.deposit(receiver, transaction.getAmount());
-				logger.info("Sender Balance After withdraw: {},  Receiver Balance After Deposit: {}",
-						withdrawAccount.getBalance(), depositAccount.getBalance());
-				Transaction transactionVal = transactionRepository.insert(transaction);
+				Transaction transactionVal = transactionRepository.transfer(transaction, sender, receiver);
 
 				return Converter.convertToTransactionDto(transactionVal);
 			}

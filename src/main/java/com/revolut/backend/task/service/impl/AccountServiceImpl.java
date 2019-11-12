@@ -3,7 +3,6 @@
  */
 package com.revolut.backend.task.service.impl;
 
-import java.math.BigDecimal;
 import java.util.Optional;
 
 import com.google.inject.Inject;
@@ -38,27 +37,6 @@ public class AccountServiceImpl implements AccountService {
 	public AccountDTO createAccount(AccountDTO accountDTO) throws AccountException {
 		Account account = accountRepository.insert(Converter.convertToAccountEntity(accountDTO));
 		return Converter.convertToAccountDto(account);
-	}
-
-	@Override
-	public Account withdraw(Account account, BigDecimal amount) throws AccountException {
-		BigDecimal newBalance = account.getBalance().subtract(amount);
-		account.setBalance(newBalance);
-
-		return this.updateAccount(account);
-
-	}
-
-	@Override
-	public Account deposit(Account account, BigDecimal amount) throws AccountException {
-		BigDecimal newBalance = account.getBalance().add(amount);
-		account.setBalance(newBalance);
-
-		return this.updateAccount(account);
-	}
-
-	private Account updateAccount(Account account) throws AccountException {
-		return accountRepository.update(account);
 	}
 
 }

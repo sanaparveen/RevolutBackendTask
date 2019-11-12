@@ -55,7 +55,7 @@ public class AccountRepositoryImpl extends DBConnectConfig implements AccountRep
 
 	@Override
 	public Account insert(Account account) throws AccountException {
-		logger.debug("Creating account " + account);
+		logger.debug("Create Account: {}", account);
 		PreparedStatement ps = null;
 		Connection conn = getCurrentConnection();
 		ResultSet insertedKeys = null;
@@ -68,7 +68,7 @@ public class AccountRepositoryImpl extends DBConnectConfig implements AccountRep
 			if (insertedKeys.next()) {
 				account.setAccountId(insertedKeys.getLong(1));
 			} else {
-				logger.error("Insert failed.");
+				logger.error("Insert failed for Account Id: {}", account.getAccountId());
 				throw new AccountException("Insert failed as no ID has returned");
 			}
 			conn.commit();
@@ -76,9 +76,9 @@ public class AccountRepositoryImpl extends DBConnectConfig implements AccountRep
 			try {
 				conn.rollback();
 			} catch (Exception rollbackException) {
-				throw new AccountException("Can't rollback account creation transaction: " + rollbackException);
+				throw new AccountException("Failed to rollback account transaction: " + rollbackException.getMessage());
 			}
-			throw new AccountException("Error in account creation transaction: {}" + e);
+			throw new AccountException("Error in account creation transaction: {}" +  e);
 		} finally {
 			close(ps);
 			close(insertedKeys);

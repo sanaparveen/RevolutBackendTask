@@ -35,7 +35,9 @@ public class TransactionDTO implements Serializable {
 	@NotNull
 	private BigDecimal amount;
 
+	public TransactionDTO() {
 
+	}
 	public TransactionDTO(long fromAccountId, long toAccountId, BigDecimal amount) {
 		this.fromAccountId = fromAccountId;
 		this.toAccountId = toAccountId;

@@ -28,7 +28,6 @@ public class Application {
 
 	private static final Logger logger = LoggerFactory.getLogger(Application.class);
 	private Javalin restApp;
-	private static Injector injector;
 
 	/**
 	 * Setup, configure the database H2 DB and start the application.
@@ -57,7 +56,7 @@ public class Application {
 	}
 
 	private void registerRestAPI() {
-		injector = Guice.createInjector(new AppInjector());
+		Injector injector = Guice.createInjector(new AppInjector());
 		final TransferHandler transactionController = injector.getInstance(TransferHandler.class);
 		restApp.get(Constants.HOME_API, ctx -> ctx.result("~~ ~~~ Revolut Backend Task for Money Transfer ~~~ ~~"));
 		restApp.post(Constants.TRANSFER_API, transactionController);

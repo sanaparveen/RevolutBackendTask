@@ -3,6 +3,7 @@
  */
 package com.revolut.backend.task.repository.impl;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -32,7 +33,7 @@ public class TransactionRepositoryImpl extends DBConnectConfig implements Transa
 
 	@Override
 	public Transaction findById(Long id) throws TransactionException {
-		logger.debug("Finding transfer " + id);
+		logger.debug("Find By Transaction Id: {}", id);
 		Transaction transaction = null;
 		ResultSet rs = null;
 		PreparedStatement ps = null;
@@ -69,46 +70,92 @@ public class TransactionRepositoryImpl extends DBConnectConfig implements Transa
 		return transaction;
 	}
 
+	/**
+	 * This method is used to transfer amount from one account to another.
+	 * The transaction is committed only when the complete transaction is completed other wise
+	 * incase of any exception the transaction is rolled back.
+	 */
 	@Override
-	public Transaction insert(Transaction transaction) throws TransactionException {
+	public Transaction transfer(Transaction transaction, Account sender, Account receiver) throws TransactionException {
 		logger.debug("Starting Transaction from Account Id: {} to Account Id: {}", transaction.getFromAccountId(),
 				transaction.getToAccountId());
-
-		ResultSet insertRS = null;
-		PreparedStatement insertPS = null;
 		Connection conn = getCurrentConnection();
 
 		try {
 			conn.setAutoCommit(false);
+			Account withdrawAccount = this.withdrawAmount(conn, sender, transaction.getAmount());
+			Account depositAccount = this.depositAmount(conn, receiver, transaction.getAmount());
 
-			insertPS = conn.prepareStatement(
-					"INSERT INTO transaction(fromAccountId, toAccountId, amount) VALUES (?,?,?)",
-					Statement.RETURN_GENERATED_KEYS);
+			logger.info("Sender Balance After withdraw: {},  Receiver Balance After Deposit: {}",
+					withdrawAccount.getBalance(), depositAccount.getBalance());
+
+			this.insertTransaction(conn, transaction);
+			conn.commit();
+		} catch (SQLException | AccountException | TransactionException e) {
+			try {
+				conn.rollback();
+			} catch (Exception rollbackException) {
+				throw new TransactionException("Cannot rollback account update transaction: " + rollbackException);
+			}
+			logger.error("Error in Transaction to Proceed: {} ", e);
+			throw new TransactionException("Error in Transaction: " + e);
+		} finally {
+			close(conn);
+		}
+		return transaction;
+	}
+
+	private Account withdrawAmount(Connection conn, Account account, BigDecimal transactionAmount)
+			throws AccountException {
+		BigDecimal newBalance = account.getBalance().subtract(transactionAmount);
+		account.setBalance(newBalance);
+		updateAccount(conn, account);
+		return account;
+	}
+
+	private Account depositAmount(Connection conn, Account account, BigDecimal transactionAmount)
+			throws AccountException {
+		BigDecimal newBalance = account.getBalance().add(transactionAmount);
+		account.setBalance(newBalance);
+		updateAccount(conn, account);
+		return account;
+	}
+
+	private void updateAccount(Connection conn, Account account) throws AccountException {
+
+		try (PreparedStatement insertPS = conn.prepareStatement("UPDATE account set balance = ? WHERE accountId = ?")) {
+			insertPS.setBigDecimal(1, account.getBalance());
+			insertPS.setLong(2, account.getAccountId());
+			insertPS.executeUpdate();
+		} catch (SQLException e) {
+			try {
+				conn.rollback();
+			} catch (Exception rollbackException) {
+				throw new AccountException("Cannot rollback account update transaction" + rollbackException);
+			}
+			throw new AccountException("Error in account update transaction" + e);
+		}
+	}
+
+	private Transaction insertTransaction(Connection conn, Transaction transaction)
+			throws SQLException, TransactionException {
+		ResultSet insertRS = null;
+		try (PreparedStatement insertPS = conn.prepareStatement(
+				"INSERT INTO transaction(fromAccountId, toAccountId, amount) VALUES (?,?,?)",
+				Statement.RETURN_GENERATED_KEYS)) {
 			insertPS.setLong(1, transaction.getFromAccountId());
 			insertPS.setLong(2, transaction.getToAccountId());
 			insertPS.setBigDecimal(3, transaction.getAmount());
 			insertPS.executeUpdate();
 			insertRS = insertPS.getGeneratedKeys();
-
 			if (insertRS.next()) {
 				transaction.setTransactionId(insertRS.getLong(1));
 				logger.debug("Transaction ID: {} ", transaction.getTransactionId());
 			} else {
-				throw new TransactionException("Can not register the transfer.");
+				throw new TransactionException("Cannot register the transfer.");
 			}
-			conn.commit();
-		} catch (SQLException e) {
-			try {
-				conn.rollback();
-			} catch (Exception rollbackException) {
-				throw new TransactionException("Can not rollback account update transaction: " + rollbackException);
-			}
-			logger.error("Error in Transaction to Proceed: {} ", e);
-			throw new TransactionException("Error in registering a transfer. " + e);
 		} finally {
-			close(insertPS);
 			close(insertRS);
-			close(conn);
 		}
 		return transaction;
 	}
