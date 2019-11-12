@@ -71,14 +71,14 @@ public class TransactionRepositoryImpl extends DBConnectConfig implements Transa
 	}
 
 	/**
-	 * This method is used to transfer amount from one account to another.
-	 * The transaction is committed only when the complete transaction is completed other wise
-	 * incase of any exception the transaction is rolled back.
+	 * This method is used to transfer amount from one account to another. The
+	 * transaction is committed only when the complete transaction is completed
+	 * other wise incase of any exception the transaction is rolled back.
 	 */
 	@Override
 	public Transaction transfer(Transaction transaction, Account sender, Account receiver) throws TransactionException {
-		logger.debug("Starting Transaction from Account Id: {} to Account Id: {}", transaction.getFromAccountId(),
-				transaction.getToAccountId());
+		logger.debug("Starting Transaction from Account Id: {} to Account Id: {}", sender.getAccountId(),
+				receiver.getAccountId());
 		Connection conn = getCurrentConnection();
 
 		try {
