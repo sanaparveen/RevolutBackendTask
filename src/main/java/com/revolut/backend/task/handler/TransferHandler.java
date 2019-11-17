@@ -36,7 +36,8 @@ public class TransferHandler implements Handler {
 				TransactionDTO transaction = transactionService
 						.transferAmount(context.bodyAsClass(TransactionDTO.class));
 				logger.info("Transaction ID: {}", transaction.getTransactionId());
-				context.status(HttpStatus.NO_CONTENT_204);
+				context.json(transaction);
+				context.status(HttpStatus.CREATED_201);
 			} catch (RevolutAPIException e) {
 				logger.info("Error in Request Processiing: {}", e);
 				context.json(e.getApiError());
