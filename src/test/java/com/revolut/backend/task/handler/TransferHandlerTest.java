@@ -47,7 +47,7 @@ public class TransferHandlerTest {
 		Mockito.when(transactionService.transferAmount(transactionDTO)).thenReturn(transactionDTO);
 		transferHandler.handle(context);
 		Mockito.verify(transactionService, times(1)).transferAmount(null);
-		Mockito.verify(context, times(1)).status(HttpStatus.NO_CONTENT_204);
+		Mockito.verify(context, times(1)).status(HttpStatus.CREATED_201);
 	}
 
 	@Test(expected = RuntimeException.class)

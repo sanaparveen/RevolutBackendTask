@@ -39,7 +39,7 @@ public class TransferHandler implements Handler {
 				context.json(transaction);
 				context.status(HttpStatus.CREATED_201);
 			} catch (RevolutAPIException e) {
-				logger.info("Error in Request Processiing: {}", e);
+				logger.error("Error in Request Processiing: {}", e);
 				context.json(e.getApiError());
 				context.status(HttpStatus.BAD_REQUEST_400);
 			}
