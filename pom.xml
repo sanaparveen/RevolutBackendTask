@@ -16,7 +16,7 @@
 		<jackson.version>2.9.10.1</jackson.version>
 		<hibernate.version>5.4.4.Final</hibernate.version>
 		<javax.validation.version>2.0.0.Final</javax.validation.version>
-		<h2database.version>1.4.197</h2database.version>
+		<h2database.version>2.1.210</h2database.version>
 		<mockito.version>3.1.0</mockito.version>
 		<maven.compiler.source>11</maven.compiler.source>
 		<maven.compiler.target>11</maven.compiler.target>
