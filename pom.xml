@@ -13,7 +13,7 @@
 		<slf4j.version>1.7.28</slf4j.version>
 		<guice.version>4.2.2</guice.version>
 		<guice.multibinding.version>4.2.0</guice.multibinding.version>
-		<jackson.version>2.9.10.1</jackson.version>
+		<jackson.version>2.12.7.1</jackson.version>
 		<hibernate.version>5.4.4.Final</hibernate.version>
 		<javax.validation.version>2.0.0.Final</javax.validation.version>
 		<h2database.version>1.4.197</h2database.version>
